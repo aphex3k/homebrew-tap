@@ -1,5 +1,13 @@
 language: generic
 os: osx
+env:
+  global:
+    HOMEBREW_NO_ANALYTICS=1
+    HOMEBREW_GITHUB_API_TOKEN=${HOMEBREW_GITHUB_API_TOKEN}
+    # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
+    BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+    SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
+  
 
 before_install:
   - brew update
@@ -7,9 +15,6 @@ before_install:
 
 script:
   - brew tap | grep aphex3k
-  # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
-  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-  - export SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
   - echo BRANCH="$BRANCH", SLUG="$SLUG"
   - git clone --depth 1 --branch $BRANCH https://github.com/$($SLUG).git repo
   - export FORMULAE=$(ls repo/Formula || echo -n "")
