@@ -1,0 +1,16 @@
+language: generic
+os: osx
+
+before_install:
+  - brew update
+  - brew tap aphex3k/tap
+
+script:
+  - brew tap | grep aphex3k
+  # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
+  - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+  - export SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
+  - git clone --depth 1 --branch $BRANCH git@github.com:$($SLUG).git repo
+  - export FORMULAE=$(ls repo/Formula)
+  - for formula in formulae; do F=$(echo $formula | sed -e "s/.rb//"); brew install --build-from-source $F; brew test $F; brew audit --strict $F; done
+  
