@@ -10,7 +10,8 @@ script:
   # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
   - export SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
+  - echo BRANCH="$BRANCH", SLUG="$SLUG"
   - git clone --depth 1 --branch $BRANCH https://github.com/$($SLUG).git repo
-  - export FORMULAE=$(ls repo/Formula)
-  - for formula in formulae; do F=$(echo $formula | sed -e "s/.rb//"); brew install --build-from-source $F; brew test $F; brew audit --strict $F; done
+  - export FORMULAE=$(ls repo/Formula || echo -n "")
+  - for FORMULA in FORMULAE; do F=$(echo $FORMULA | sed -e "s/.rb//"); brew install --build-from-source $F; brew test $F; brew audit --strict $F; done
   
