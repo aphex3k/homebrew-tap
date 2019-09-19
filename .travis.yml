@@ -2,7 +2,7 @@ language: generic
 os: osx
 env:
   global:
-    HOMEBREW_NO_ANALYTICS=1
+    HOMEBREW_NO_ANALYTICS=${HOMEBREW_NO_ANALYTICS}
     HOMEBREW_GITHUB_API_TOKEN=${HOMEBREW_GITHUB_API_TOKEN}
     # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
     BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
