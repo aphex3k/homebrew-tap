@@ -3,7 +3,7 @@ Homebrew personal tap - This tap allows me to add my own formulae to [Homebrew](
 
 ## How do I install these formulae?
 
-1. `brew tap homebrew/aliases`
+1. `brew tap aphex3k/tap`
 1. `brew install <formula>`
 
 ### Want to run your own tap?

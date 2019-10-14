@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                echo 'Clean'
+                sh 'git clean -xdf'
+            }
+        }
+        stage ('Travis CI') {
+            steps {
+                script {
+                    sh '/usr/local/bin/docker run -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml || /usr/local/bin/docker run -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml'
+                }
+            }
+        }
+        stage ('Audit') {
+            parallel {
+                // stage ('Formulae') {
+                //     steps {
+                //         script {
+                //             // TODO: Fix formula audit on Jenkins
+                //             // sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew audit ./$FORMULA || brew audit ./$FORMULA; done'
+                //         }
+                //     }
+                // }
+                stage ('Casks') {
+                    steps {
+                        script {
+                            sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask audit ./$CASK || brew cask audit ./$CASK; done'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        cleanup {
+            sh 'git clean -xdf'            
+        }
+    }
+}
