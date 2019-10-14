@@ -11,10 +11,23 @@ env:
 before_install:
   - brew update
   - brew tap aphex3k/tap
+  # - brew doctor
+  # Please note that these warnings are just used to help the Homebrew maintainers
+  # with debugging if you file an issue. If everything you use Homebrew for is
+  # working fine: please don't worry or file an issue; just ignore this. Thanks!
+  #
+  # Warning: A newer Command Line Tools release is available.
+  # Update them from Software Update in the App Store.
+  #
+  # Warning: Your Xcode (9.4.1) is outdated.
+  # Please update to Xcode 10.1 (or delete it).
+  # Xcode can be updated from the App Store.
+  #
+  # The command "brew doctor" failed and exited with 1 during .
 
 script:
   - brew tap | grep aphex3k
   - echo BRANCH="$BRANCH", SLUG="$SLUG"
   - git clone --depth 1 --branch $BRANCH https://github.com/$SLUG.git repo
   - for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); brew audit ./$FORMULA; done
-  - for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); brew cask audit ./$CASK; done
+  - for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); brew cask audit ./$CASK && brew cask style ./$CASK; done

@@ -19,20 +19,33 @@ pipeline {
                 }
             }
         }
-        stage ('Audit') {
+        stage ('Checks') {
             parallel {
-                // stage ('Formulae') {
-                //     steps {
-                //         script {
-                //             // TODO: Fix formula audit on Jenkins
-                //             // sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew audit ./$FORMULA || brew audit ./$FORMULA; done'
-                //         }
-                //     }
-                // }
-                stage ('Casks') {
+                stage ('Formulae audit') {
+                    steps {
+                        script {
+                            sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew audit ./$FORMULA || brew audit ./$FORMULA; done'
+                        }
+                    }
+                }
+                stage ('Formulae style') {
+                    steps {
+                        script {
+                            sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew style ./$FORMULA || brew style ./$FORMULA; done'
+                        }
+                    }
+                }
+                stage ('Casks audit') {
                     steps {
                         script {
                             sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask audit ./$CASK || brew cask audit ./$CASK; done'
+                        }
+                    }
+                }
+                stage ('Casks style') {
+                    steps {
+                        script {
+                            sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask style ./$CASK || brew cask style ./$CASK; done'
                         }
                     }
                 }
