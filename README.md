@@ -1,4 +1,4 @@
-# homebrew-tap
+# homebrew-tap [![Build Status](https://travis-ci.org/aphex3k/homebrew-tap.svg?branch=master)](https://travis-ci.org/aphex3k/homebrew-tap)
 Homebrew personal tap - This tap allows me to add my own formulae to [Homebrew](https://brew.sh/). Feel free to use at your own risk. See the [license](LICENSE) for copyright information.
 
 ## How do I install these formulae?
