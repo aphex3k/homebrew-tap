@@ -2,12 +2,11 @@ language: generic
 os: osx
 env:
   global:
-    HOMEBREW_NO_ANALYTICS=${HOMEBREW_NO_ANALYTICS}
-    HOMEBREW_GITHUB_API_TOKEN=${HOMEBREW_GITHUB_API_TOKEN}
+    - export HOMEBREW_NO_ANALYTICS=${HOMEBREW_NO_ANALYTICS}
+    - export HOMEBREW_GITHUB_API_TOKEN=${HOMEBREW_GITHUB_API_TOKEN}
     # https://graysonkoonce.com/getting-the-current-branch-name-during-a-pull-request-in-travis-ci/
-    BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-    SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
-  
+    - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+    - export SLUG=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_REPO_SLUG; else echo $TRAVIS_PULL_REQUEST_SLUG; fi)
 
 before_install:
   - brew update
@@ -17,6 +16,5 @@ script:
   - brew tap | grep aphex3k
   - echo BRANCH="$BRANCH", SLUG="$SLUG"
   - git clone --depth 1 --branch $BRANCH https://github.com/$SLUG.git repo
-  - export FORMULAE=$(ls repo/Formula || echo -n "")
-  - for FORMULA in FORMULAE; do F=$(echo $FORMULA | sed -e "s/.rb//"); brew install --build-from-source $F; brew test $F; brew audit --strict $F; done
-  
+  - for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); brew audit ./$FORMULA; done
+  - for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); brew cask audit ./$CASK; done
