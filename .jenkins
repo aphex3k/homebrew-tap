@@ -20,7 +20,7 @@ pipeline {
         stage ('Travis CI') {
             steps {
                 script {
-                    sh '/usr/local/bin/docker run -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml || /usr/local/bin/docker run -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml'
+                    sh '/usr/local/bin/docker run --rm -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml || /usr/local/bin/docker run --rm -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml'
                 }
             }
         }
@@ -67,6 +67,5 @@ pipeline {
         failure {
             slackSend botUser: true, channel: '@mhenke', color: '#ff0000', iconEmoji: ':octocat:', message: "failed ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'com.slack.mhenke.token', username: 'Octocat'
         }
-
     }
 }
