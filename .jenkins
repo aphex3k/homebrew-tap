@@ -5,6 +5,11 @@ properties([
 pipeline {
     agent any
     stages {
+        stage('Notify Start') {
+            steps {
+                slackSend botUser: true, channel: '@mhenke', color: '#000000', iconEmoji: ':octocat:', message: "started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'com.slack.mhenke.token', username: 'Octocat'
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scm
@@ -56,5 +61,12 @@ pipeline {
         cleanup {
             sh 'git clean -xdf'            
         }
+        success {
+            slackSend botUser: true, channel: '@mhenke', color: '#00ff00', iconEmoji: ':octocat:', message: "succeeded ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'com.slack.mhenke.token', username: 'Octocat'
+        }
+        failure {
+            slackSend botUser: true, channel: '@mhenke', color: '#ff0000', iconEmoji: ':octocat:', message: "failed ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'com.slack.mhenke.token', username: 'Octocat'
+        }
+
     }
 }
