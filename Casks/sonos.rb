@@ -1,8 +1,8 @@
 cask 'sonos' do
-  version '10.4'
-  sha256 '139c3c978dce9dc43648847bbce44c9781ba939a6c28fc39bca99e97a0c3da81'
+  version '10.6'
+  sha256 '30269870a7fded8897ab324a1d93a01252e7a045ec5ca6bf937952821fc401a1'
 
-  url 'https://update.sonos.com/software/mac/mdcr/SonosDesktopController104.dmg'
+  url 'https://update.sonos.com/software/mac/mdcr/SonosDesktopController106.dmg'
   name 'Sonos Desktop Controller for Mac'
   homepage 'https://www.sonos.com/en-us/support'
 
