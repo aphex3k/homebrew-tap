@@ -6,7 +6,7 @@ class SimpleFuzzer < Formula
   version "0.7.1"
   head "https://github.com/orgcandman/Simple-Fuzzer.git"
 
-  depends_on "openssl"
+  depends_on "openssl@1.1"
 
   def install
     system "./configure", "--prefix=#{prefix}"
