@@ -20,39 +20,35 @@ pipeline {
         stage ('Travis CI') {
             steps {
                 script {
-                    sh '/usr/local/bin/docker run --rm -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml || /usr/local/bin/docker run --rm -v $(pwd)/:/data/ aphex3k/docker-travis-lint .travis.yml'
+                    sh '/usr/local/bin/docker run --rm -v "$(pwd)/:/data/" aphex3k/docker-travis-lint .travis.yml || /usr/local/bin/docker run --rm -v "$(pwd)/:/data/" aphex3k/docker-travis-lint .travis.yml'
                 }
             }
         }
-        stage ('Checks') {
-            parallel {
-                stage ('Formulae audit') {
-                    steps {
-                        script {
-                            sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew audit ./$FORMULA || brew audit ./$FORMULA; done'
-                        }
-                    }
+        stage ('Formulae audit') {
+            steps {
+                script {
+                    sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew audit ./$FORMULA || brew audit ./$FORMULA; done'
                 }
-                stage ('Formulae style') {
-                    steps {
-                        script {
-                            sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew style ./$FORMULA || brew style ./$FORMULA; done'
-                        }
-                    }
+            }
+        }
+        stage ('Formulae style') {
+            steps {
+                script {
+                    sh 'for FORMULA in Formula/*.rb; do F=$(echo $FORMULA | sed -e "s/.rb//"); /usr/local/bin/brew style ./$FORMULA || brew style ./$FORMULA; done'
                 }
-                stage ('Casks audit') {
-                    steps {
-                        script {
-                            sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask audit ./$CASK || brew cask audit ./$CASK; done'
-                        }
-                    }
+            }
+        }
+        stage ('Casks audit') {
+            steps {
+                script {
+                    sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask audit ./$CASK || brew cask audit ./$CASK; done'
                 }
-                stage ('Casks style') {
-                    steps {
-                        script {
-                            sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask style ./$CASK || brew cask style ./$CASK; done'
-                        }
-                    }
+            }
+        }
+        stage ('Casks style') {
+            steps {
+                script {
+                    sh 'for CASK in Casks/*.rb; do C=$(echo $CASK | sed -e "s/.rb//"); /usr/local/bin/brew cask style ./$CASK || brew cask style ./$CASK; done'
                 }
             }
         }
